@@ -7,9 +7,9 @@ on:
 
 env:
     AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID  }}    # set this to your Azure Subscription Id
-    AZURE_RESOURCEGROUP_NAME: demo-webapp-gh-actions                      # set this to your preferred resource group name
-    AZURE_WEBAPP_NAME: demo-webapp-gh-actions                          # set this to your preferred resource group name
-    ASP_NAME: demo-webapp-gh-actions                            # set this to your preferred resource group name
+    AZURE_RESOURCEGROUP_NAME: demo-webappsql-gh-actions                      # set this to your preferred resource group name
+    AZURE_WEBAPP_NAME: demo-webappsql-gh-actions                          # set this to your preferred resource group name
+    ASP_NAME: demo-webappsql-gh-actions                            # set this to your preferred resource group name
     
 jobs:
     build-and-deploy-to-dev:
