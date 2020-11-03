@@ -37,6 +37,9 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('aspName'))]"
             ],
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "properties": {
                 "name": "[parameters('webappName')]",
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('aspName'))]"
