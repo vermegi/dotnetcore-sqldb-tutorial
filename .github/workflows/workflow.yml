@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - vermegi/infra
+      - workflows
   pull_request:
     branches:
       - '*'
