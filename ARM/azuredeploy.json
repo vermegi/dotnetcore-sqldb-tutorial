@@ -20,6 +20,30 @@
                 "description": "description"
             },
             "defaultValue": "S1"
+        },
+        "sqlServerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of your SQL Server"
+            }
+        },
+        "databaseName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of your database"
+            }
+        },
+        "sqlAdminLogin": {
+            "type": "string",
+            "metadata": {
+                "description": "Account name for the SQL Server Admin login"
+            }
+        },
+        "sqlAdminPass": {
+            "type": "string",
+            "metadata": {
+                "description": "Password for the SQL Server Admin Account"
+            }
         }
     },
     "functions": [],
@@ -77,6 +101,52 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/Sites', parameters('webappName'))]"
             ]
+        },
+        {
+            "name": "[parameters('sqlServerName')]",
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2014-04-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "[parameters('sqlServerName')]"
+            },
+            "properties": {
+                "administratorLogin": "[parameters('sqlAdminLogin')]",
+                "administratorLoginPassword": "[parameters('sqlAdminPass')]"
+            },
+            "resources": [
+                {
+                    "type": "firewallRules",
+                    "apiVersion": "2014-04-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+                    ],
+                    "location": "[resourceGroup().location]",
+                    "name": "AllowAllWindowsAzureIps",
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "[concat(parameters('sqlServerName'), '/', parameters('databaseName'))]",
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2014-04-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "[parameters('databaseName')]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+            ],
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "edition": "Basic",
+                "maxSizeBytes": "1073741824",
+                "requestedServiceObjectiveName": "Basic"
+            }
         }
     ],
     "outputs": {}
