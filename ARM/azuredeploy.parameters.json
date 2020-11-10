@@ -7,6 +7,18 @@
           } ,
         "aspName": {
             "value": "GEN-UNIQUE"
-          }
+          },
+        "sqlServerName": {
+            "value": "GEN-UNIQUE"
+        },
+        "databaseName": {
+            "value": "GEN-UNIQUE"
+        },
+        "sqlAdminLogin": {
+            "value": "GEN-UNIQUE"
+        },
+        "sqlAdminPass": {
+            "value": "GEN-UNIQUE"
+        }
     }
 }
