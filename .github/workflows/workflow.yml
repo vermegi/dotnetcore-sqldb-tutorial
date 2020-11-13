@@ -20,7 +20,11 @@ env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1'           # set this to the dot net version to use
   AZURE_RESOURCEGROUP_NAME: demo-webappsql-gh-actions # set this to your preferred resource group name
-
+  SQLSERVER_NAME: demo-webappsql-gh-actions-srv                          # set this to your preferred sql server name
+  DATABASE_NAME: demo-webappsql-gh-actions-db                   # set this to your preferred sql database name
+  SQLADMIN_LOGIN: ${{ secrets.SQLADMIN_LOGIN  }}                # Create a secret in your Github repo for the SQL Admin login name you want to use
+  SQLADMIN_PASS: ${{ secrets.SQLADMIN_PASS  }}                 # Create a secret in your Github repo for the SQL Admin password you want to use
+  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -54,8 +58,24 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
-      - name: Swap to production slot
+
+    - name: create db connection string
+      run: |
+        CONN_STR=$(az sql db show-connection-string --client ado.net --server ${{ env.SQLSERVER_NAME }} --name ${{ env.DATABASE_NAME }} -o tsv)
+        CONN_STR=$(echo $CONN_STR | sed "s/<username>/${{ env.SQLADMIN_LOGIN }}/g")
+        CONN_STR=$(echo $CONN_STR | sed "s/<password>/${{ env.SQLADMIN_PASS }}/g")
+        echo "SQL_DB_CONN_STR=$CONN_STR" >> $GITHUB_ENV
+
+    - name: Update Database
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet tool restore
+        dotnet ef database update
+      env:
+        ConnectionStrings__MyDbConnection: ${{ env.SQL_DB_CONN_STR }}
+      working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+    
+    - name: Swap to production slot
         run: |
           az webapp deployment slot swap --resource-group ${{ env.AZURE_RESOURCEGROUP_NAME }} --name ${{ env.AZURE_WEBAPP_NAME }} --slot staging --target-slot production
           echo "Swap finished. App Service Application URL: https://$(az webapp show --resource-group ${{ env.AZURE_RESOURCEGROUP_NAME }} --name ${{ env.AZURE_WEBAPP_NAME }} --query hostNames[0] -o tsv)"
