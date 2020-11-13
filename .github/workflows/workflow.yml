@@ -69,7 +69,6 @@ jobs:
       - name: Update Database
         run: |
           dotnet tool install --global dotnet-ef
-          dotnet ef migrations add InitialCreate
           dotnet ef database update
         env:
           ConnectionStrings__MyDbConnection: ${{ env.SQL_DB_CONN_STR }}
