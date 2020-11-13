@@ -16,7 +16,7 @@ namespace DotNetCoreSqlDb.Migrations
                         .Annotation("Sqlite:Autoincrement", true)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: true),
-                    CreatedDate = table.Column<string>(nullable: false)
+                    CreatedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
