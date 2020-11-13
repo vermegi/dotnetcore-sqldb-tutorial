@@ -72,7 +72,6 @@ jobs:
           dotnet ef database update
         env:
           ConnectionStrings__MyDbConnection: ${{ env.SQL_DB_CONN_STR }}
-        working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
       
       - name: Swap to production slot
         run: |
