@@ -23,10 +23,10 @@ namespace DotNetCoreSqlDb.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("VARCHAR");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("VARCHAR");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
